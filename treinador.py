@@ -1,12 +1,11 @@
 import mysql.connector
-import random 
+import time
 
-class treinador:
-    def __init__(self, nome, idade, cidade, pokedex_treinador):
+class Treinador:
+    def __init__(self, nome, idade, cidade,):
         self.nome = nome
         self.idade = idade
         self.cidade = cidade
-        self.pokedex = pokedex_treinador
         self.conexao = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -14,7 +13,13 @@ class treinador:
             database="projeto_integrado"
         )
         self.cursor = self.conexao.cursor()
-    
+    def registrar_treinador(self):
+        sql = "INSERT INTO treinador (id_treinador, nome, idade, cidade) VALUES (%s, %s, %s, %s)"
+        val = (self.nome, self.idade, self.cidade)
+        print('treinador registrado')
+        self.cursor.execute(sql, val)
+        self.conexao.commit()
+   
     def pokedex_treinador(self):
         sql = "CREATE TABLE pokemon_coletados (id_treinador INT PRIMARY KEY, nome_treinador VARCHAR(50), id_pokemon INT, nome_pokemon VARCHAR(50))"
         self.cursor.execute(sql)
@@ -29,14 +34,38 @@ class Pokedex:
         )
         self.cursor = self.conexao.cursor()
         
-    def adicionar_pokemon(self, pokemon):
-        self.pokemon = pokemon
-        sql = "INSERT INTO pokemon_coletados (id_pokemon,id_treinador)VALUES(%s,%s)"
-        valores = (self.id_pokemon,self.id_treinador)
-        self.cursor.execute(sql,valores)
-        self.conexao.commit()
-        print("Pokémon capturado com sucesso.")
+    def escolher_primero_pokemon(self):
+        numero_pokedex = [1, 4, 7]
+        pokedex = pokedex()
+        pokemon1 = pokedex.procurar_pokemon(numero_pokedex[0])
+        pokemon2 = pokedex.procurar_pokemon(numero_pokedex[1])
+        pokemon3 = pokedex.procurar_pokemon(numero_pokedex[2])
         
+        print(f"Escolha um dos seguintes pokémons para ser o seu primeiro:")
+        print(f"1 - {pokemon1[1]} (Tipo: {pokemon1[2]}, ataque: {pokemon1[3]})")
+        print(f"2 - {pokemon2[1]} (Tipo: {pokemon2[2]}, ataque: {pokemon2[3]})")
+        print(f"3 - {pokemon3[1]} (Tipo: {pokemon3[2]}, ataque: {pokemon3[3]})")
+        
+        escolha = None
+        tempo_inicial = time.time()
+        while True:
+            escolha = input('digite o número do pokémon que você quer escolhe: ')
+            
+            if escolha in ['1', '2', '3']:
+                escolha = int(escolha)
+                break
+            
+            else:
+                print(' entrada invalida. digite 1, 2 ou 3.')
+                
+                tempo_atual = time.time()
+                if tempo_atual - tempo_inicial > 30:
+                    print("Tempo esgotado. Um pikachu será escolhido pelo sistema.")
+                    escolha = 25
+                    break
+        self.importa_pokemon(escolha)
+        print(f"Parabéns! Você escolheu o {self.pokemons[0][1]} como seu primeiro pokémon.")
+                     
     def lista_pokemon(self):
         sql = "SELECT * FROM pokemon_coletados"
         self.cursor.execute(sql)
