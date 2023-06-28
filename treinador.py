@@ -1,18 +1,15 @@
 import mysql.connector
 import time
+from pokedex import conexao
 
-class Treinador:
+class Treinador(conexao):
     def __init__(self, nome, idade, cidade):
+        super().__init__()
         self.nome = nome
         self.idade = idade
         self.cidade = cidade
-        self.conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Senac2021",
-            database="projeto_integrador"
-        )
-        self.cursor = self.conexao.cursor()
+        
+
     def registrar_treinador(self):
         sql = "INSERT INTO treinadores (nome, idade, cidade) VALUES (%s, %s, %s)"
         val = (self.nome, self.idade, self.cidade)
@@ -24,22 +21,15 @@ class Treinador:
         self.cursor.execute(f"select * from treinadores where nome = '{self.nome}'")
         treinador = self.cursor.fetchone()
         return treinador[0]
+    
       
-class Pokedex:
-    def __init__(self):
-        self.conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Senac2021",
-            database="projeto_integrador"
-        )
-        self.cursor = self.conexao.cursor()
+class Pokedex(conexao):
         
     def escolher_primero_pokemon(self,idTreiner):
         pokedex = Pokedex()
-        pokemon1 = pokedex.procurar_pokemon(1)
-        pokemon2 = pokedex.procurar_pokemon(4)
-        pokemon3 = pokedex.procurar_pokemon(7)
+        pokemon1 = pokedex.toma_no_cu_pokemon(1)
+        pokemon2 = pokedex.toma_no_cu_pokemon(4)
+        pokemon3 = pokedex.toma_no_cu_pokemon(7)
 
 
         print(f"Escolha um dos seguintes pokémons para ser o seu primeiro:")
@@ -48,26 +38,31 @@ class Pokedex:
         print(f"3 - {pokemon3[1]} (Tipo: {pokemon3[2]}, ataque: {pokemon3[3]})")
         
         escolha = None
-        tempo_inicial = time.time()
+        tempo_inicial = time.localtime()
         while True:
             escolha = input('digite o número do pokémon que você quer escolhe: ')
             
             if escolha in ['1', '2', '3']:
                 escolha = int(escolha)
+                match escolha:
+                    case 2: escolha = 4
+                    case 3: escolha = 7
                 break
             
             else:
                 print(' entrada invalida. digite 1, 2 ou 3.')
-                
-                tempo_atual = time.time()
-                if tempo_atual - tempo_inicial > 30:
+                tempo_atual = time.localtime()
+                if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) > 30:
                     print("Tempo esgotado. Um pikachu será escolhido pelo sistema.")
                     escolha = 25
                     break
         
-        self.importa_pokemon(idTreiner, escolha)
-        print(f"Parabéns! Você escolheu o {self.pokemons[0][1]} como seu primeiro pokémon.")
-                     
+
+        self.cursor.execute(f"select * from pokemon where numero_na_pokedex = {escolha}")
+        pokemon = self.cursor.fetchone()
+        self.importa_pokemon(idTreiner, escolha, pokemon[1])
+        print(f"Parabéns! Você escolheu o {pokemon[1]} como seu primeiro pokémon.")
+                             
     def lista_pokemon(self):
         sql = "SELECT * FROM pokemon_coletados"
         self.cursor.execute(sql)
@@ -88,7 +83,7 @@ class Pokedex:
         self.cursor.execute(sql, valores)
         self.conexao.commit()
         
-    def procurar_pokemon(self, id):
+    def toma_no_cu_pokemon(self, id):
         sql =f"SELECT * FROM pokemon WHERE numero_na_pokedex = {id}"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchone()
@@ -98,13 +93,22 @@ class Pokedex:
         
         else:
             return resultado
+        
+    def procura_pokemon(self):
+        sql =f"SELECT * FROM pokemon_coletados WHERE numero_na_pokedex = {id}"
+        self.cursor.execute(sql)
+        resultado = self.cursor.fetchone()
+        if resultado is None:
+            print('pokémon não encontrado')
+            return None
+        
+        else:
+             print(f"nome: {resultado[1]}\nataque: {resultado[2]}\ndefesa: {resultado[3]}\nhabilidades: {resultado[6]}")
 
-    def importa_pokemon(self, id_treinador, id_pokemon):
-        self.cursor.execute(f"insert into pokemon_coletados (id_treinador,id_pokemon) values ({id_treinador},{id_pokemon})")
+    def importa_pokemon(self, id_treinador, id_pokemon, nome_pokemon):
+        self.cursor.execute(f"insert into pokemon_coletados (id_treinador,id_pokemon,nome_pokemon) values ({id_treinador},{id_pokemon},'{nome_pokemon}')")
         self.conexao.commit()
     
-    def fecha_conexao(self):
-        self.cursor.close()
-        self.conexao.close()
+    
 
 

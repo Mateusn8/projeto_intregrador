@@ -12,3 +12,4 @@ pokedex = Pokedex()
 
 pokedex.escolher_primero_pokemon(treinador1.pegar_id())
 pokedex.fecha_conexao()
+
