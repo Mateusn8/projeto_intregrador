@@ -5,7 +5,7 @@ class conexao:
         self.conexao = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Senac2021",
+            password="Mateus4321",
             database="projeto_integrador"
         )
         self.cursor = self.conexao.cursor()
@@ -39,6 +39,25 @@ class professor(conexao):
         
         else:
             print(f"nome: {resultado[1]}\nataque: {resultado[2]}\ndefesa: {resultado[3]}\nhabilidades: {resultado[6]}")
+            
+    def informacoes_pokemon_lemdario(self):
+        sql =f"SELECT * FROM pokemon_lendarios WHERE numero_na_pokedex = {id}"
+        self.cursor.execute(sql)
+        resultado = self.cursor.fetchone()
+        if resultado is None:
+            print('pokémon não encontrado')
+            return None
+        
+        else:
+            print(f"nome: {resultado[1]}\nataque: {resultado[2]}\ndefesa: {resultado[3]}\nhabilidades: {resultado[6]}")
+            
+    def lista_geracao_pokemon_lendarios(self):
+        geracao = input(int('Insira a geração a ser exibida: '))
+        sql = f'SELECT * FROM pokemon_lendarios where geracao = {geracao}'
+        self.cursor.execute(sql)
+        pokemons = self.cursor.fetchall()
+        for pokemon_lendarios in pokemons:
+            print(pokemon_lendarios)
 
     def deleta_pokemon(self, id_pokemon):
         sql = "DELETE FROM pokemon WHERE id_pokemon = %s"
@@ -54,10 +73,16 @@ class professor(conexao):
         self.conexao.commit()
         print("Pokémon lendario deletado com sucesso.")
 
-    # def 
+    def atualiza_pokemon(self, id_pokemon, novo_nome):
+        sql = f"UPDATE {self.nome} SET nome = %s WHERE id_pokemon = %s"
+        valores = (novo_nome, id_pokemon)
+        self.cursor.execute(sql, valores)
+        self.conexao.commit()    
 
 class Pokemon(conexao):
+    
     def __init__(self, nome, ataque, defesa, vida, geracao, habilidades):
+        super().__init__()
         self.nome = nome
         self.ataque = ataque
         self.defesa = defesa

@@ -27,9 +27,9 @@ class Pokedex(conexao):
         
     def escolher_primero_pokemon(self,idTreiner):
         pokedex = Pokedex()
-        pokemon1 = pokedex.toma_no_cu_pokemon(1)
-        pokemon2 = pokedex.toma_no_cu_pokemon(4)
-        pokemon3 = pokedex.toma_no_cu_pokemon(7)
+        pokemon1 = pokedex.procura_pokemon(1)
+        pokemon2 = pokedex.procura_pokemon(4)
+        pokemon3 = pokedex.procura_pokemon(7)
 
 
         print(f"Escolha um dos seguintes pokémons para ser o seu primeiro:")
@@ -57,18 +57,12 @@ class Pokedex(conexao):
                     escolha = 25
                     break
         
-
         self.cursor.execute(f"select * from pokemon where numero_na_pokedex = {escolha}")
         pokemon = self.cursor.fetchone()
         self.importa_pokemon(idTreiner, escolha, pokemon[1])
         print(f"Parabéns! Você escolheu o {pokemon[1]} como seu primeiro pokémon.")
                              
-    def lista_pokemon(self):
-        sql = "SELECT * FROM pokemon_coletados"
-        self.cursor.execute(sql)
-        pokemons_capturados = self.cursor.fetchall()
-        for pokemon in pokemons_capturados:
-            print(pokemon)
+   
     
     def solta_pokemon(self, id_pokemon):
         sql = "DELETE FROM pokemon_coletados WHERE id_pokemon = %s"
@@ -77,13 +71,31 @@ class Pokedex(conexao):
         self.conexao.commit()
         print("Pokémon solto com sucesso.")
     
-    def nomea_pokemon(self, id_pokemon, novo_nome):
-        sql = f"UPDATE {self.nome} SET nome = %s WHERE id_pokemon = %s"
-        valores = (novo_nome, id_pokemon)
+    def nomea_pokemon(self):
+        id_pokemon = Pokedex.lista_pokemon_capturados()
+        print(id_pokemon)
+        escolha = input(int('Insira o número do pokémon de escolha: '))
+        escolha = id_pokemon[escolha]
+        print(escolha)
+        escolha = escolha[1]
+        print(escolha)
+        novo_nome = input(str('Insira o novo nome do pokémon: '))
+        sql = "UPDATE pokemon_coletados SET nome = %s WHERE id_pokemon = %s"
+        valores = (novo_nome, escolha)
         self.cursor.execute(sql, valores)
         self.conexao.commit()
         
-    def toma_no_cu_pokemon(self, id):
+
+    def lista_pokemon_capturados(self, id_treinador):
+        lista = []
+        sql = f"SELECT * FROM pokemon_coletados WHERE id_treinador = {id_treinador}"
+        self.cursor.execute(sql)
+        resultado = self.cursor.fetchall()
+        for linha in resultado: 
+            lista.append(linha)
+        print(lista)
+    
+    def procura_pokemon(self, id):
         sql =f"SELECT * FROM pokemon WHERE numero_na_pokedex = {id}"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchone()
@@ -94,10 +106,10 @@ class Pokedex(conexao):
         else:
             return resultado
         
-    def procura_pokemon(self):
+    def exibir_pokemon(self, id):
         sql =f"SELECT * FROM pokemon_coletados WHERE numero_na_pokedex = {id}"
         self.cursor.execute(sql)
-        resultado = self.cursor.fetchone()
+        resultado = self.cursor.fetchall()
         if resultado is None:
             print('pokémon não encontrado')
             return None
