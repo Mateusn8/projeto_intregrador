@@ -1,4 +1,5 @@
 from treinador import Treinador, Pokedex
+from pokedex import professor
 
 # nome = input('nome: ')
 # idade = int(input('idade: '))
@@ -9,11 +10,19 @@ from treinador import Treinador, Pokedex
 
 
 pokedex = Pokedex()
+prof = professor()
+nome = input('n: ')
+senha = input("s: ")
+
+prof.login(nome,)
 
 
-Pokedex.lista_pokemon_capturados(15)
-Pokedex.nomea_pokemon()
+# pokedex.lista_pokemon_capturados(38)
+# pokedex.nomea_pokemon()
+
 
 # pokedex.escolher_primero_pokemon(treinador1.pegar_id())
 # pokedex.fecha_conexao()
+
+
 

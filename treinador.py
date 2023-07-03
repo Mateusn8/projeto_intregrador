@@ -5,10 +5,30 @@ from pokedex import conexao
 class Treinador(conexao):
     def __init__(self, nome, idade, cidade):
         super().__init__()
-        self.nome = nome
-        self.idade = idade
-        self.cidade = cidade
+        self._nome = nome
+        self._idade = idade
+        self._cidade = cidade
         
+    @property
+    def nome(self):
+        return self._nome
+    @nome.setter
+    def nome(self, valor):
+        self.nome = valor
+    
+    @property
+    def idade(self):
+        return self._idade
+    @idade.setter
+    def idade(self, valor):
+        self.idade = valor
+
+    @property
+    def cidade(self):
+        return self._cidade
+    @cidade.setter
+    def cidade(self, valor):
+        self.cidade = valor
 
     def registrar_treinador(self):
         sql = "INSERT INTO treinadores (nome, idade, cidade) VALUES (%s, %s, %s)"
@@ -72,16 +92,16 @@ class Pokedex(conexao):
         print("Pokémon solto com sucesso.")
     
     def nomea_pokemon(self):
-        id_pokemon = Pokedex.lista_pokemon_capturados()
-        print(id_pokemon)
-        escolha = input(int('Insira o número do pokémon de escolha: '))
-        escolha = id_pokemon[escolha]
+        lista = self.lista_pokemon_capturados(int(input("ID do Treinador: ")))
+        print(lista)
+        Escolha = int(input('Insira o número do pokémon de escolha: '))
+        escolha = lista[Escolha-1]
         print(escolha)
-        escolha = escolha[1]
-        print(escolha)
-        novo_nome = input(str('Insira o novo nome do pokémon: '))
-        sql = "UPDATE pokemon_coletados SET nome = %s WHERE id_pokemon = %s"
-        valores = (novo_nome, escolha)
+        id = escolha[1]
+        novo_nome = input('Insira o novo nome do pokémon: ')
+        sql = "UPDATE pokemon_coletados SET nome_pokemon = %s WHERE id_pokemon = %s"
+        valores = (novo_nome, id)
+        print("pokemon renomeado com sucesso")
         self.cursor.execute(sql, valores)
         self.conexao.commit()
         
@@ -94,6 +114,7 @@ class Pokedex(conexao):
         for linha in resultado: 
             lista.append(linha)
         print(lista)
+        return lista
     
     def procura_pokemon(self, id):
         sql =f"SELECT * FROM pokemon WHERE numero_na_pokedex = {id}"

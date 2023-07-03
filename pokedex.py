@@ -5,7 +5,7 @@ class conexao:
         self.conexao = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Mateus4321",
+            password="Senac2021",
             database="projeto_integrador"
         )
         self.cursor = self.conexao.cursor()
@@ -15,12 +15,35 @@ class conexao:
         self.conexao.close()
 
 class professor(conexao):
-    def __init__(self, nome, idade, cidade):
+    def __init__(self):
         super().__init__()
-        self.nome = nome
-        self.idade = idade
-        self.cidade = cidade
-       
+        
+    def registrar_professor(self):
+        sql = "INSERT INTO professores (nome, idade, cidade, senha) VALUES (%s, %s, %s, %s)"
+        val = (self.nome, self.idade, self.cidade, self.senha)
+        print('profesor registrado')
+        self.cursor.execute(sql, val)
+        self.conexao.commit()
+
+    def login(self, nome, senha:str):
+        sql = f"SELECT * FROM professores where nome = '{nome}';"
+        self.cursor.execute(sql)
+        lista_professores = self.cursor.fetchone()
+        
+        print(lista_professores)
+        while True:
+            if senha != lista_professores[4] or  nome != lista_professores[1]:
+                print("sem registro")
+                return False
+            
+            elif senha != lista_professores[4] and nome == lista_professores[1]:
+                print("senha incorreta")
+                return False
+            
+            if nome == lista_professores[1] and  senha == lista_professores[4]:
+                print("login efetuado")
+                return True
+
     def lista_geracao_pokemon(self):
         geracao = input(int('Insira a geração a ser exibida: '))
         sql = f'SELECT * FROM pokemon where geracao = {geracao}'
