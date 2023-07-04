@@ -1,9 +1,13 @@
 import mysql.connector
 import time
-from pokedex import conexao
+from pokedex import Conexao
 
-class Treinador(conexao):
-    def __init__(self, nome, idade, cidade):
+class Treinador(Conexao):
+    
+    def __init__(self):
+        super().__init__()
+    
+    def treinador(self, nome, idade, cidade):
         super().__init__()
         self._nome = nome
         self._idade = idade
@@ -33,9 +37,10 @@ class Treinador(conexao):
     def registrar_treinador(self):
         sql = "INSERT INTO treinadores (nome, idade, cidade) VALUES (%s, %s, %s)"
         val = (self.nome, self.idade, self.cidade)
-        print('treinador registrado')
         self.cursor.execute(sql, val)
         self.conexao.commit()
+    
+        print('treinador registrado')
     
     def pegar_id(self):
         self.cursor.execute(f"select * from treinadores where nome = '{self.nome}'")
@@ -43,9 +48,9 @@ class Treinador(conexao):
         return treinador[0]
     
       
-class Pokedex(conexao):
+class Pokedex(Conexao):
         
-    def escolher_primero_pokemon(self,idTreiner):
+    def escolher_primero_pokemon(self,id_treinador):
         pokedex = Pokedex()
         pokemon1 = pokedex.procura_pokemon(1)
         pokemon2 = pokedex.procura_pokemon(4)
@@ -72,14 +77,14 @@ class Pokedex(conexao):
             else:
                 print(' entrada invalida. digite 1, 2 ou 3.')
                 tempo_atual = time.localtime()
-                if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) > 30:
+                if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) > 10:
                     print("Tempo esgotado. Um pikachu será escolhido pelo sistema.")
                     escolha = 25
                     break
         
         self.cursor.execute(f"select * from pokemon where numero_na_pokedex = {escolha}")
         pokemon = self.cursor.fetchone()
-        self.importa_pokemon(idTreiner, escolha, pokemon[1])
+        self.importa_pokemon(id_treinador, escolha, pokemon[1])
         print(f"Parabéns! Você escolheu o {pokemon[1]} como seu primeiro pokémon.")
                              
    
@@ -89,31 +94,39 @@ class Pokedex(conexao):
         valor = (id_pokemon)
         self.cursor.execute(sql, valor)
         self.conexao.commit()
+        
         print("Pokémon solto com sucesso.")
     
     def nomea_pokemon(self):
         lista = self.lista_pokemon_capturados(int(input("ID do Treinador: ")))
+       
         print(lista)
+       
         Escolha = int(input('Insira o número do pokémon de escolha: '))
         escolha = lista[Escolha-1]
+       
         print(escolha)
+       
         id = escolha[1]
         novo_nome = input('Insira o novo nome do pokémon: ')
         sql = "UPDATE pokemon_coletados SET nome_pokemon = %s WHERE id_pokemon = %s"
         valores = (novo_nome, id)
-        print("pokemon renomeado com sucesso")
         self.cursor.execute(sql, valores)
         self.conexao.commit()
         
+        print("pokemon renomeado com sucesso")
 
-    def lista_pokemon_capturados(self, id_treinador):
+    def lista_pokemon_capturados(self):
+        id_treinador = int(input("Digite o ID do treinador: "))
         lista = []
         sql = f"SELECT * FROM pokemon_coletados WHERE id_treinador = {id_treinador}"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchall()
-        for linha in resultado: 
-            lista.append(linha)
-        print(lista)
+        
+        for pokemon in resultado: 
+            lista.append(pokemon)
+        
+        print(pokemon[2])
         return lista
     
     def procura_pokemon(self, id):
@@ -128,12 +141,12 @@ class Pokedex(conexao):
             return resultado
         
     def exibir_pokemon(self, id):
+        id = int(input("digite o ID do pokemon: "))
         sql =f"SELECT * FROM pokemon_coletados WHERE numero_na_pokedex = {id}"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchall()
         if resultado is None:
             print('pokémon não encontrado')
-            return None
         
         else:
              print(f"nome: {resultado[1]}\nataque: {resultado[2]}\ndefesa: {resultado[3]}\nhabilidades: {resultado[6]}")
