@@ -1,23 +1,26 @@
 from treinador import Treinador, Pokedex
 from pokedex import professor, Conexao
 from batalha import batalha
-
-
-
-
-# pokedex = Pokedex()
-
-# id_treinador = int(input("digite o ID do treinador: "))
-# pokedex.lista_pokemon_capturados(id_treinador)
-
 conexao = Conexao()
 
+# nome = input("nome: ")
+# idade = int(input("idade: "))
+# cidade = input("cidade: ")
+
+treinador = Treinador()
+pokedex = Pokedex()
+
+# treinador.treinador(nome, idade, cidade):
+
+pokedex.lista_pokemon_capturados()
 
 
-captura = batalha()
+# captura = batalha()
 
-captura.captura_pokemon()
+# captura.captura_pokemon()
 
-conexao.fecha_conexao()
+
     
+# pokedex.escolher_primero_pokemon(treinador1.pegar_id())
+pokedex.fecha_conexao()
 

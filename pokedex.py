@@ -5,7 +5,7 @@ class Conexao:
         self.conexao = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Mateus4321",
+            password="Senac2021",
             database="projeto_integrador"
         )
         self.cursor = self.conexao.cursor()
@@ -15,6 +15,7 @@ class Conexao:
         self.conexao.close()
 
 class professor(Conexao):
+    
     def __init__(self):
         super().__init__()
         
@@ -116,8 +117,11 @@ class professor(Conexao):
         self.cursor.execute(sql, valores)
         self.conexao.commit()   
 
-class Pokemon(Conexao):
+from abc import ABC, abstractmethod
+
+class Pokemon(Conexao, ABC):
     
+    @abstractmethod
     def __init__(self, nome, ataque, defesa, vida, geracao, habilidades):
         super().__init__()
         self.nome = nome
@@ -127,6 +131,11 @@ class Pokemon(Conexao):
         self.geracao = geracao    
         self.habilidades = habilidades
 
-class lendaria(Pokemon):
-    def __init__(self, nome, ataque, defesa, vida, geracao, habilidades):
-        super().__init__(nome, ataque, defesa, vida, geracao, habilidades)
+    def pokemon(self):
+        super().__init__()
+
+    def pokemon_lendario(self):
+        super().__init__()
+        
+
+

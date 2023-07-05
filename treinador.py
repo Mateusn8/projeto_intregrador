@@ -2,13 +2,14 @@ import mysql.connector
 import time
 from pokedex import Conexao
 
+
+
 class Treinador(Conexao):
-    
+
     def __init__(self):
         super().__init__()
     
     def treinador(self, nome, idade, cidade):
-        super().__init__()
         self._nome = nome
         self._idade = idade
         self._cidade = cidade
@@ -49,6 +50,8 @@ class Treinador(Conexao):
     
       
 class Pokedex(Conexao):
+
+
         
     def escolher_primero_pokemon(self,id_treinador):
         pokedex = Pokedex()
@@ -125,8 +128,9 @@ class Pokedex(Conexao):
         
         for pokemon in resultado: 
             lista.append(pokemon)
+            print(pokemon[2])
         
-        print(pokemon[2])
+        
         return lista
     
     def procura_pokemon(self, id):
