@@ -12,8 +12,11 @@ pokedex = Pokedex()
 
 # treinador.treinador(nome, idade, cidade):
 
-pokedex.lista_pokemon_capturados()
+# pokedex.lista_pokemon_capturados()
 
+
+
+pokedex.login()
 
 # captura = batalha()
 

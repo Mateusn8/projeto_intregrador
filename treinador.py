@@ -51,8 +51,34 @@ class Treinador(Conexao):
       
 class Pokedex(Conexao):
 
+    def login(self):
 
+        while True:
+            id_treinador = int(input('Insira seu id: '))
+            nome = input('Insira seu nome: ')
+            sql = f"SELECT * FROM treinadores where id_treinador = '{id_treinador}';"
+            self.cursor.execute(sql)
+            treinador = self.cursor.fetchone()
         
+            try:
+                if id_treinador != treinador[0] or  nome != treinador[1]:
+                    print("sem registro")
+                    return False
+            
+                elif id_treinador != treinador[0] and nome == treinador[1]:
+                    print("ID incorreta")
+                    return False
+        
+                if nome == treinador[1] and  id_treinador == treinador[0]:
+                    print(treinador[0], treinador[1])
+                    print("login efetuado")
+                    return True
+        
+            except:
+                print('Conta não encontrada.\n\n     Otário.')
+
+
+
     def escolher_primero_pokemon(self,id_treinador):
         pokedex = Pokedex()
         pokemon1 = pokedex.procura_pokemon(1)
@@ -128,6 +154,7 @@ class Pokedex(Conexao):
         
         for pokemon in resultado: 
             lista.append(pokemon)
+            
             print(pokemon[2])
         
         
