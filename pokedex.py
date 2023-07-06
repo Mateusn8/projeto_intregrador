@@ -5,7 +5,7 @@ class Conexao:
         self.conexao = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Senac2021",
+            password="Mateus4321",
             database="projeto_integrador"
         )
         self.cursor = self.conexao.cursor()
@@ -29,20 +29,20 @@ class professor(Conexao):
     def login(self, nome, senha:str):
         sql = f"SELECT * FROM professores where nome = '{nome}';"
         self.cursor.execute(sql)
-        lista_professores = self.cursor.fetchone()
-        print(lista_professores)
+        professor = self.cursor.fetchone()
+        print(professor)
         
         while True:
             
-            if senha != lista_professores[4] or  nome != lista_professores[1]:
+            if senha != professor[4] or  nome != professor[1]:
                 print("sem registro")
                 return False
             
-            elif senha != lista_professores[4] and nome == lista_professores[1]:
+            elif senha != professor[4] and nome == professor[1]:
                 print("senha incorreta")
                 return False
             
-            if nome == lista_professores[1] and  senha == lista_professores[4]:
+            if nome == professor[1] and  senha == professor[4]:
                 print("login efetuado")
                 return True
 

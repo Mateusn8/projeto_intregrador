@@ -36,12 +36,16 @@ class Treinador(Conexao):
         self.cidade = valor
 
     def registrar_treinador(self):
+        nome = input("Digite o seu nome: ")
+        idade = int(input("Digite sua idade: "))
+        cidade = input('digite sua cidade: ')
         sql = "INSERT INTO treinadores (nome, idade, cidade) VALUES (%s, %s, %s)"
-        val = (self.nome, self.idade, self.cidade)
+        val = (nome, idade, cidade)
         self.cursor.execute(sql, val)
-        self.conexao.commit()
-    
-        print('treinador registrado')
+        self.conexao.commit() 
+        self.cursor.execute(f"select * from treinadores where nome = '{nome}'")
+        treinador = self.cursor.fetchone()
+        print(f'treinador registrado\nSeu ID é {treinador[0]}')
     
     def pegar_id(self):
         self.cursor.execute(f"select * from treinadores where nome = '{self.nome}'")
@@ -61,6 +65,7 @@ class Pokedex(Conexao):
             treinador = self.cursor.fetchone()
         
             try:
+                
                 if id_treinador != treinador[0] or  nome != treinador[1]:
                     print("sem registro")
                     return False
@@ -79,7 +84,7 @@ class Pokedex(Conexao):
 
 
 
-    def escolher_primero_pokemon(self,id_treinador):
+    def escolher_primero_pokemon(self, id_treinador):
         pokedex = Pokedex()
         pokemon1 = pokedex.procura_pokemon(1)
         pokemon2 = pokedex.procura_pokemon(4)
@@ -118,7 +123,8 @@ class Pokedex(Conexao):
                              
    
     
-    def solta_pokemon(self, id_pokemon):
+    def solta_pokemon(self):
+        id_pokemon = int(input("Digite o ID do pokémon que deseja solta: "))
         sql = "DELETE FROM pokemon_coletados WHERE id_pokemon = %s"
         valor = (id_pokemon)
         self.cursor.execute(sql, valor)
@@ -134,7 +140,7 @@ class Pokedex(Conexao):
         Escolha = int(input('Insira o número do pokémon de escolha: '))
         escolha = lista[Escolha-1]
        
-        print(escolha)
+        print(escolha[2])
        
         id = escolha[1]
         novo_nome = input('Insira o novo nome do pokémon: ')
@@ -171,11 +177,11 @@ class Pokedex(Conexao):
         else:
             return resultado
         
-    def exibir_pokemon(self, id):
-        id = int(input("digite o ID do pokemon: "))
-        sql =f"SELECT * FROM pokemon_coletados WHERE numero_na_pokedex = {id}"
+    def exibir_pokemon(self):
+        id_pokemon = int(input("digite o ID do pokemon: "))
+        sql =f"SELECT * FROM pokemon WHERE numero_na_pokedex = {id_pokemon}"
         self.cursor.execute(sql)
-        resultado = self.cursor.fetchall()
+        resultado = self.cursor.fetchone()
         if resultado is None:
             print('pokémon não encontrado')
         
