@@ -125,18 +125,14 @@ class Pokedex(Conexao):
     
     def solta_pokemon(self):
         id_pokemon = int(input("Digite o ID do pokémon que deseja solta: "))
-        sql = "DELETE FROM pokemon_coletados WHERE id_pokemon = %s"
-        valor = (id_pokemon)
-        self.cursor.execute(sql, valor)
+        sql = f"DELETE FROM pokemon_coletados WHERE id_pokemon = {id_pokemon}"
+        self.cursor.execute(sql)
         self.conexao.commit()
         
         print("Pokémon solto com sucesso.")
     
     def nomea_pokemon(self):
-        lista = self.lista_pokemon_capturados(int(input("ID do Treinador: ")))
-       
-        print(lista)
-       
+        lista = self.lista_pokemon_capturados()
         Escolha = int(input('Insira o número do pokémon de escolha: '))
         escolha = lista[Escolha-1]
        
@@ -161,7 +157,7 @@ class Pokedex(Conexao):
         for pokemon in resultado: 
             lista.append(pokemon)
             
-            print(pokemon[2])
+            print(F'ID: {pokemon[1]}\nnome: {pokemon[2]}')
         
         
         return lista

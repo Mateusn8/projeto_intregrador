@@ -19,8 +19,8 @@ while True:
         
         print("          Menu de login da Pokedex          \n\n\
             Qual apção desejada\n\
-        \n1 Registra jogador\n\
-        \n2 Fazer login")
+        \n1: Registra jogador\n\
+        \n2: Fazer login")
 
         escolha = int(input("\n\nDigite a opção desejada: "))
 
@@ -63,12 +63,12 @@ while True:
         
         print("          Menu da pokedex          \n\n\
             Qual apção desejada\n\
-        \n1 Captura pokémon\n\
-        \n2 Renomea pokémon\n\
-        \n3 Lista pokémon capturados\n\
-        \n4 Procura pokémon\n\
-        \n5 Sollta pokémon\n\
-        \n6 Sair do Menu\n")
+        \n1: Captura pokémon\n\
+        \n2: Renomea pokémon\n\
+        \n3: Lista pokémon capturados\n\
+        \n4: Procura pokémon\n\
+        \n5: Sollta pokémon\n\
+        \n6: Sair do Menu\n")
         
         escolha = int(input("Digite a opção desejada: "))
         
