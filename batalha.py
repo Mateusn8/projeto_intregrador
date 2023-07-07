@@ -8,7 +8,9 @@ class batalha(Pokedex):
         numero = random.randint(1, 100)
         
         while True:
+            
             try:
+            
                 if numero <= 10: 
                     sql = "SELECT * FROM pokemon_lendarios;"
                     self.cursor.execute(sql)

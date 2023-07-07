@@ -58,7 +58,7 @@ while True:
         print("Escolha invalida.")
 
 while True:
-    
+
     try:
         
         print("          Menu da pokedex          \n\n\

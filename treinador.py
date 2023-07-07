@@ -111,7 +111,7 @@ class Pokedex(Conexao):
             else:
                 print(' entrada invalida. digite 1, 2 ou 3.')
                 tempo_atual = time.localtime()
-                if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) > 10:
+                if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) < 10:
                     print("Tempo esgotado. Um pikachu será escolhido pelo sistema.")
                     escolha = 25
                     break
