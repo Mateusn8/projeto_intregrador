@@ -13,8 +13,28 @@ class Conexao:
     def fecha_conexao(self):
         self.cursor.close()
         self.conexao.close()
+        
+from abc import ABC, abstractmethod
 
-class professor(Conexao):
+class Pokemon(Conexao, ABC):
+    
+    @abstractmethod
+    def __init__(self, nome, ataque, defesa, vida, geracao, habilidades):
+        super().__init__()
+        self.nome = nome
+        self.ataque = ataque
+        self.defesa = defesa
+        self.vida = vida
+        self.geracao = geracao    
+        self.habilidades = habilidades
+
+    def pokemon(self):
+        super().__init__()
+
+    def pokemon_lendario(self):
+        super().__init__()
+
+class Professor(Conexao):
     
     def __init__(self):
         super().__init__()
@@ -26,7 +46,9 @@ class professor(Conexao):
         self.cursor.execute(sql, val)
         self.conexao.commit()
 
-    def login(self, nome, senha:str):
+    def login(self):
+        senha = input("Digite sua senha: ")
+        nome = input("Digite seu Nome: ")
         sql = f"SELECT * FROM professores where nome = '{nome}';"
         self.cursor.execute(sql)
         professor = self.cursor.fetchone()
@@ -55,7 +77,7 @@ class professor(Conexao):
         for pokemon in pokemons:
             print(f"nome: {pokemon[1]}, ataque: {pokemon[2]}, defesa: {pokemon[3]}, vida: {pokemon[4]}, geracao: {pokemon[5]}, habilidades: {pokemon[6]}")
 
-    def informacoes_pokemon(self, id):
+    def informacoes_pokemon(self):
         id = int(input("digite o ID do pokemon: "))
         sql =f"SELECT * FROM pokemon WHERE numero_na_pokedex = {id}"
         self.cursor.execute(sql)
@@ -91,51 +113,68 @@ class professor(Conexao):
             
             print(f"nome: {pokemon_lendarios[1]}\nataque: {pokemon_lendarios[2]}\ndefesa: {pokemon_lendarios[3]}\nvida: {pokemon_lendarios[4]}\ngeracao: {pokemon_lendarios[5]}\nhabilidades: {pokemon_lendarios[6]}")
             
-    def deleta_pokemon(self, id_pokemon):
-        sql = "DELETE FROM pokemon WHERE id_pokemon = %s"
-        valor = (id_pokemon)
-        self.cursor.execute(sql, valor)
+    def deleta_pokemon(self):
+        id_pokemon = int(input("Digite o ID do pokemon: "))
+        sql = f"DELETE FROM pokemon WHERE id_pokemon = {id_pokemon}"
+        self.cursor.execute(sql)
         self.conexao.commit()
         print("Pokémon deletado com sucesso.")
 
-    def deleta_pokemon_lendario(self, id_pokemon):
-        sql = "DELETE FROM pokemon WHERE id_pokemon = %s"
-        valor = (id_pokemon)
-        self.cursor.execute(sql, valor)
+    def deleta_pokemon_lendario(self):
+        id_pokemon = int(input("Digite o ID do pokemon: "))
+        sql = f"DELETE FROM pokemon WHERE id_pokemon = {id_pokemon}"
+        self.cursor.execute(sql)
         self.conexao.commit()
         print("Pokémon lendario deletado com sucesso.")
 
-    def atualiza_pokemon(self, id_pokemon, novo_nome):
-        sql = "UPDATE pokemon SET nome = %s WHERE id_pokemon = %s"
-        valores = (novo_nome, id_pokemon)
+    def atualiza_pokemon(self):
+        id_pokemon = int(input("Digite o ID do pokemon que deseja atualizar: "))
+        novo_nome = input("Nome: ")
+        novo_ataque = int(input('Ataque: '))
+        nova_defesa = int(input("Defesa:"))
+        nova_vida = int(input('Vida: '))
+        sql = "UPDATE pokemon SET nome = %s, ataque = %s, defesa = %s, vida = %s WHERE numero_na_pokedex = %s"
+        valores = (novo_nome, novo_ataque, nova_defesa, nova_vida, id_pokemon)
         self.cursor.execute(sql, valores)
         self.conexao.commit() 
         
-    def atualiza_pokemon_lendarios(self, id_pokemon, novo_nome):
-        sql = "UPDATE pokemon_lendarios SET nome = %s WHERE id_pokemon = %s"
-        valores = (novo_nome, id_pokemon)
+    def atualiza_pokemon_lendarios(self):
+        id_pokemon = int(input("Digite o ID do pokemon que deseja atualizar: "))
+        novo_nome = input("Nome: ")
+        novo_ataque = int(input('Ataque: '))
+        nova_defesa = int(input("Defesa:"))
+        nova_vida = int(input('Vida: '))
+        sql = "UPDATE pokemon_lendarios SET nome = %s, ataque = %s, defesa = %s, vida = %s WHERE numero_na_pokedex = %s"
+        valores = (novo_nome, novo_ataque, nova_defesa, nova_vida, id_pokemon)
         self.cursor.execute(sql, valores)
         self.conexao.commit()   
+        
+    def registrar_pokemon(self):
+        numero_na_pokedex = int(input("Digite o ID do pokemon que deseja atualizar: "))
+        nome = input("Nome: ")
+        ataque = int(input('Ataque: '))
+        defesa = int(input("Defesa:"))
+        vida = int(input('Vida: '))
+        geracao = int(input('Geração: '))
+        habilidades = input('habilidade: ')
+        sql = "INSERT INTO pokemon (numero_na_pokedex, nome, ataque, defesa, vida, geracao, habilidades) values (%s,%s,%s,%s,%s,%s,%s)"
+        valores = (numero_na_pokedex, nome, ataque, defesa, vida, geracao, habilidades)
+        self.cursor.execute(sql, valores)
+        self.conexao.commit()
 
-from abc import ABC, abstractmethod
-
-class Pokemon(Conexao, ABC):
-    
-    @abstractmethod
-    def __init__(self, nome, ataque, defesa, vida, geracao, habilidades):
-        super().__init__()
-        self.nome = nome
-        self.ataque = ataque
-        self.defesa = defesa
-        self.vida = vida
-        self.geracao = geracao    
-        self.habilidades = habilidades
-
-    def pokemon(self):
-        super().__init__()
-
-    def pokemon_lendario(self):
-        super().__init__()
+    def registrar_pokemon_lendario(self):
+        numero_na_pokedex = int(input("Digite o ID do pokemon que deseja atualizar: "))
+        nome = input("Nome: ")
+        ataque = int(input('Ataque: '))
+        defesa = int(input("Defesa:"))
+        vida = int(input('Vida: '))
+        geracao = int(input('Geração: '))
+        habilidades = input('habilidade: ')
+        sql = "INSERT INTO pokemon_lendarios (numero_na_pokedex, nome, ataque, defesa, vida, geracao, habilidades) values (%s,%s,%s,%s,%s,%s,%s)"
+        valores = (numero_na_pokedex, nome, ataque, defesa, vida, geracao, habilidades)
+        self.cursor.execute(sql, valores)
+        self.conexao.commit()
         
 
 
+    

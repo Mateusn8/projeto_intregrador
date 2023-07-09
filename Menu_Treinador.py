@@ -1,6 +1,7 @@
+
 import mysql.connector
 from treinador import Treinador, Pokedex
-from pokedex import professor, Conexao, Pokemon
+from pokedex import  Conexao
 from batalha import batalha
 conexao = Conexao()
 treinador = Treinador()
@@ -95,3 +96,5 @@ while True:
         
     except:
         print("\nVoçê errou tente novamente")
+        
+conexao.close()
