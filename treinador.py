@@ -47,10 +47,6 @@ class Treinador(Conexao):
         treinador = self.cursor.fetchone()
         print(f'treinador registrado\nSeu ID é {treinador[0]}')
     
-    def pegar_id(self):
-        self.cursor.execute(f"select * from treinadores where nome = '{self.nome}'")
-        treinador = self.cursor.fetchone()
-        return treinador[0]
     
       
 class Pokedex(Conexao):
@@ -58,31 +54,30 @@ class Pokedex(Conexao):
     def login(self):
 
         while True:
-            id_treinador = int(input('Insira seu id: '))
+
+            self.id_treinador = int(input('Insira seu id: '))
             nome = input('Insira seu nome: ')
-            sql = f"SELECT * FROM treinadores where id_treinador = '{id_treinador}';"
+            sql = f"SELECT * FROM treinadores where id_treinador = '{self.id_treinador}';"
             self.cursor.execute(sql)
             treinador = self.cursor.fetchone()
         
             try:
                 
-                if id_treinador != treinador[0] or  nome != treinador[1]:
+                if self.id_treinador != treinador[0] or  nome != treinador[1]:
                     print("sem registro")
                     return False
             
-                elif id_treinador != treinador[0] and nome == treinador[1]:
+                elif self.id_treinador != treinador[0] and nome == treinador[1]:
                     print("ID incorreta")
                     return False
         
-                if nome == treinador[1] and  id_treinador == treinador[0]:
+                if nome == treinador[1] and  self.id_treinador == treinador[0]:
                     print(treinador[0], treinador[1])
                     print("login efetuado")
                     return True
         
             except:
-                print('Conta não encontrada.\n\n     Otário.')
-
-
+                print('Conta não encontrada.')
 
     def escolher_primero_pokemon(self, id_treinador):
         pokedex = Pokedex()
@@ -109,7 +104,7 @@ class Pokedex(Conexao):
                 tempo_atual = time.localtime()
                 break
                 
-            if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) >= 10:
+            if float(time.strftime("%S",tempo_atual)) - float(time.strftime("%S",tempo_inicial)) > 10:
                 print("Tempo esgotado. Um pikachu será escolhido pelo sistema.")
                 escolha = 25
                 break
@@ -139,11 +134,10 @@ class Pokedex(Conexao):
         escolha = lista[Escolha-1]
        
         print(escolha[2])
-       
-        id = escolha[1]
+        id_pokemon = escolha[1]
         novo_nome = input('Insira o novo nome do pokémon: ')
-        sql = "UPDATE pokemon_coletados SET nome_pokemon = %s WHERE id_pokemon = %s"
-        valores = (novo_nome, id)
+        sql = "UPDATE pokemon_coletados SET nome_pokemon = %s WHERE id_pokemon = %s AND id_treinador = %s"
+        valores = (novo_nome, id_pokemon, self.id_treinador)
         self.cursor.execute(sql, valores)
         self.conexao.commit()
         
@@ -155,11 +149,12 @@ class Pokedex(Conexao):
         sql = f"SELECT * FROM pokemon_coletados WHERE id_treinador = {id_treinador}"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchall()
-        
+        num = 0
+
         for pokemon in resultado: 
             lista.append(pokemon)
-            
-            print(F'ID: {pokemon[1]}\nnome: {pokemon[2]}')
+            num += 1 
+            print(F'Numero: {num}\nnome: {pokemon[2]}')
         
         
         return lista
@@ -190,6 +185,7 @@ class Pokedex(Conexao):
         self.cursor.execute(f"insert into pokemon_coletados (id_treinador,id_pokemon,nome_pokemon) values ({id_treinador},{id_pokemon},'{nome_pokemon}')")
         self.conexao.commit()
     
-    
-
-
+    def pegar_id(self):
+        self.cursor.execute(f"select * from treinadores where nome = '{self.nome}'")
+        treinador = self.cursor.fetchone()
+        return treinador[0]

@@ -10,7 +10,7 @@ captura = batalha()
 conexao = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Mateus4321",
+            password="Senac2021",
             database="projeto_integrador")
 cursor = conexao.cursor()
 
@@ -60,15 +60,15 @@ while True:
 
 while True:
 
-    try:
+    # try:
         
         print("          Menu da pokedex          \n\n\
-            Qual apção desejada\n\
+            Qual opção desejada\n\
         \n1: Captura pokémon\n\
         \n2: Renomea pokémon\n\
         \n3: Lista pokémon capturados\n\
         \n4: Procura pokémon\n\
-        \n5: Sollta pokémon\n\
+        \n5: Solta pokémon\n\
         \n6: Sair do Menu\n")
         
         escolha = int(input("Digite a opção desejada: "))
@@ -94,7 +94,7 @@ while True:
         else:
             print("\nEscolha invalida")
         
-    except:
-        print("\nVoçê errou tente novamente")
+    # except:
+    #     print("\nVoçê errou tente novamente")
         
 conexao.close()
