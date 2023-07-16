@@ -1,49 +1,47 @@
 import random
 from treinador import Pokedex
 pokedex = Pokedex
+
 class batalha(Pokedex):
-    while True:
-        
-        try:
         
             def captura_pokemon(self):
                 numero = random.randint(1, 100)
                 self.id_treinador = int(input("Digite seu ID: "))
-                    
-                if numero <= 10: 
-                    sql = "SELECT * FROM pokemon_lendarios;"
-                    self.cursor.execute(sql)
-                    lista = self.cursor.fetchall()
-                    pokemon = random.choice(lista)
-                    print(f"Um {pokemon[1]}, se ferrou")
-                    return False
-                
-                else: 
-                    sql = "SELECT * FROM pokemon;"
-                    self.cursor.execute(sql)
-                    lista = self.cursor.fetchall()
-                    pokemon_selvagen = random.choice(lista)
-                    self.vidaInimigo = pokemon_selvagen[4]
-                    print(f"Um {pokemon_selvagen[1]}\nAtaque: {pokemon_selvagen[2]}\nDefesa: {pokemon_selvagen[3]}\nVida: {pokemon_selvagen[4]}\n       deseja batalhar?")
-                    numero = random.randint(1, 100)
-                    escolha = input('\nDigite s pra sim ou n pra não: ')
-                    enfraquecido = self.vidaInimigo*(20/100)
-                    self.atacar_selvagen = pokemon_selvagen[2]
-                    
-                    if escolha == 's':
-                        sql = f"SELECT * FROM pokemon_coletados where id_treinador = {self.id_treinador}"
+            
+                while True:
+                            
+                    if numero <= 10: 
+                        sql = "SELECT * FROM pokemon_lendarios;"
                         self.cursor.execute(sql)
                         lista = self.cursor.fetchall()
-                            
-                        for pokemon in lista:
-                            print(f"ID: {pokemon[1]} Pokemon: {pokemon[2]}")
-                        self.id_pokemon = int(input('Insira o ID do pokémon: '))
-                        sql = "SELECT * FROM pokemon_coletados WHERE id_pokemon = %s AND id_treinador = %s"
-                        self.cursor.execute(sql, (self.id_pokemon, self.id_treinador))
-                        resultado = self.cursor.fetchone()        
+                        pokemon = random.choice(lista)
+                        print(f"Um {pokemon[1]}, se ferrou")
+                        return False
                     
-                        while True:
-                                    
+                    else: 
+                        sql = "SELECT * FROM pokemon;"
+                        self.cursor.execute(sql)
+                        lista = self.cursor.fetchall()
+                        pokemon_selvagen = random.choice(lista)
+                        self.vidaInimigo = pokemon_selvagen[4]
+                        print(f"Um {pokemon_selvagen[1]}\nAtaque: {pokemon_selvagen[2]}\nDefesa: {pokemon_selvagen[3]}\nVida: {pokemon_selvagen[4]}\n       deseja batalhar?")
+                        numero = random.randint(1, 100)
+                        escolha = input('\nDigite s pra sim ou n pra não: ')
+                        enfraquecido = self.vidaInimigo*(20/100)
+                        self.atacar_selvagen = pokemon_selvagen[2]
+                        
+                        if escolha == 's':
+                            sql = f"SELECT * FROM pokemon_coletados where id_treinador = {self.id_treinador}"
+                            self.cursor.execute(sql)
+                            lista = self.cursor.fetchall()
+                                
+                            for pokemon in lista:
+                                print(f"ID: {pokemon[1]} Pokemon: {pokemon[2]}")
+                            self.id_pokemon = int(input('Insira o ID do pokémon: '))
+                            sql = "SELECT * FROM pokemon_coletados WHERE id_pokemon = %s AND id_treinador = %s"
+                            self.cursor.execute(sql, (self.id_pokemon, self.id_treinador))
+                            resultado = self.cursor.fetchone()        
+                                        
                             if resultado:
                                 sql = f"SELECT * FROM pokemon WHERE numero_na_pokedex = {self.id_pokemon}"
                                 self.cursor.execute(sql)
@@ -61,8 +59,6 @@ class batalha(Pokedex):
                                     
                                     if ataque > 0:
                                         print(f"Voçe deu {ataque} de dano")
-                            
-                                while True:
                                 
                                     if self.vidaInimigo <= enfraquecido:
                                         print("O pokemon esta enfraquecido, deseja captura?")
@@ -103,8 +99,7 @@ class batalha(Pokedex):
                                 elif self.vida <= 0:
                                     print("A vida do seu pokemon chegou a zero")
                                     return False
-                                    
-                            
+                                                        
                                 elif ataque <= 0:
                                     print("Você n deu nenhum dano")
                                                 
@@ -124,16 +119,15 @@ class batalha(Pokedex):
                             
                             else :
                                 print("Escolha invalida")                       
-                
-                if numero <= 20:
-                    print("O pokemon fugiu, mas sorte da proxima vez")
-                    return False
                     
-                elif escolha == 'n':
-                    print("Você fugiu")
-                
-                else:
-                    print("Escolha invalida")
+                    if numero <= 20:
+                        print("O pokemon fugiu, mas sorte da proxima vez")
+                        return False
                         
-        except:
-            print("Você errou")
+                    elif escolha == 'n':
+                        print("Você fugiu")
+                    
+                    else:
+                        print("Escolha invalida")
+                            
+            
